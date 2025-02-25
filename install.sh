@@ -61,20 +61,21 @@ verify_checksum() {
 
 # Check if the local rocm-portable.dwarfs file exists
 download_and_compare_checksum() {
-  if [[ -f $HOME/.local/rocm-portable.dwarfs ]]; then
-    download_checksum
-    if ! verify_checksum $HOME/.local/rocm-portable.dwarfs $XDG_RUNTIME_DIR/$ROCM_CHECKSUM ; then
-      echo "Redownloading rocm-portable.dwarfs..."
-      curl $URI -o $HOME/.local/rocm-portable.dwarfs
-      compare_checksum
-    fi
-    echo "Local rocm-portable.dwarfs is up to date."
-    return 0
+  if [[ ! -f $HOME/.local/rocm-portable.dwarfs ]]; then
+    echo "Downloading rocm-portable.dwarfs..."
+    curl $URI -o $HOME/.local/rocm-portable.dwarfs
+    download_and_compare_checksum
   fi
+  if ! verify_checksum $HOME/.local/rocm-portable.dwarfs $XDG_RUNTIME_DIR/$ROCM_CHECKSUM ; then
+    echo "Downloading rocm-portable.dwarfs..."
+    curl $URI -o $HOME/.local/rocm-portable.dwarfs
+    download_and_compare_checksum
+  fi
+  echo "Local rocm-portable.dwarfs is up to date."
+  return 0
 }
 
-curl $URI -o $HOME/.local/rocm-portable.dwarfs
-compare_checksum
+download_and_compare_checksum
 
 # if [[ -n $XDG_DATA_HOME ]]; then
 #   ICD_INSTALL_PATH=$XDG_DATA_HOME/OpenCL/vendors
