@@ -20,7 +20,7 @@ for app_id in "$@"; do
   echo "Setting LD_LIBRARY_PATH for $app_id to: $temp_var"
 
   # Apply the override
-  flatpak --user override --env=LD_LIBRARY_PATH="$temp_var" --env=OCL_ICD_VENDORS="$HOME/.local/share/OpenCL/vendors/rocm-portable.icd" "$app_id"
+  flatpak --user override --env=LD_LIBRARY_PATH="$temp_var" --env=OCL_ICD_VENDORS="$HOME/.local/share/OpenCL/vendors/rocm-portable.icd:/usr/lib/x86_64-linux-gnu/GL/OpenCL/vendors/rusticl.icd" "$app_id"
 
   echo "Override applied for $app_id."
 done
