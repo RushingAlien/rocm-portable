@@ -86,7 +86,7 @@ mkdir -p $ICD_INSTALL_PATH
 # install rocm bundle
 echo "$ROCM_INSTALL_PATH/lib/libamdocl64.so" > $ICD_INSTALL_PATH/rocm-portable.icd
 echo "$ICD_INSTALL_PATH/rocm-portable.icd created"
-$HOME/.local/bin/dwarfs $HOME/.local/rocm-portable.dwarfs $ROCM_INSTALL_PATH
+dwarfs $HOME/.local/rocm-portable.dwarfs $ROCM_INSTALL_PATH
 echo "rocm-portable.dwarfs mounted to $ROCM_INSTALL_PATH"
 
 echo "dwarfs $HOME/.local/rocm-portable.dwarfs $ROCM_INSTALL_PATH" >> $HOME/.bash_profile
