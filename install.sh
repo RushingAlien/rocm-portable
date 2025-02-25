@@ -39,7 +39,7 @@ if ! which dwarfs > /dev/null 2>&1; then
 fi
 
 # download rocm bundle
-curl $URI -o $XDG_DATA_HOME/.local/rocm-portable.dwarfs &&
+curl $URI -o $HOME/.local/rocm-portable.dwarfs &&
 
 # if [[ -n $XDG_DATA_HOME ]]; then
 #   ICD_INSTALL_PATH=$XDG_DATA_HOME/OpenCL/vendors
