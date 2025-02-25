@@ -73,6 +73,9 @@ compare_checksum() {
   fi
 }
 
+curl $URI -o $HOME/.local/rocm-portable.dwarfs
+compare_checksum
+
 # if [[ -n $XDG_DATA_HOME ]]; then
 #   ICD_INSTALL_PATH=$XDG_DATA_HOME/OpenCL/vendors
 # else
