@@ -14,3 +14,5 @@ This will check for for availability of dwarfs in the system, if doesn't exist, 
 ## integrate.sh
 This will set up ROCm environment variables to a Flatpak app. Adding global env override may break things, so integrate.sh operates on a per-app basis.
 
+# releases
+- https://share.rushingalien.my.id/rocm-portable/rocm-portable-0.1.0-6.2.4.dwarfs
