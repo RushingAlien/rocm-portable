@@ -17,6 +17,16 @@ This will set up ROCm environment variables to a Flatpak app. Adding global env 
 ./integrate.sh <flatpak-app-id-1> <flatpak-app-id-2> ...
 ```
 
+# Use outside of Flatpak
+Want to use this outside flatpak too? You can use `/etc/ld.so.conf.d/rocm-portable.conf` or directly to  `/etc/ld.so.conf`
+```
+/path/to/rocm-portable-mount/lib
+```
+as well as add `/etc/OpenCL/vendors/rocm-portable.icd` with content:
+```
+libamdocl64.so
+```
+
 # Manual setup
 1. Install dwarfs with method of your choosing (tarball, AUR, universal binary, COPR, PPA, etc)
 2. Download one of the portable ROCm bundles below
