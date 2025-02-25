@@ -42,7 +42,7 @@ fi
 
 download_checksum() {
     echo "Downloading checksum file..."
-    curl $CHECKSUM_URI -o $XDG_RUNTIME_DIR/$ROCM_CHECKSUM
+    curl -s $CHECKSUM_URI -o $XDG_RUNTIME_DIR/$ROCM_CHECKSUM
 }
 
 # Function to verify the checksum
