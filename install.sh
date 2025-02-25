@@ -11,6 +11,8 @@ ROCM_VER=6.2.4
 ROCM_BUNDLE=rocm-portable-$VER-$ROCM_VER.dwarfs
 URI=https://share.rushingalien.my.id/rocm-portable/$ROCM_BUNDLE
 ROCM_INSTALL_PATH=$HOME/.local/rocm
+CHECKSUM_URI=https://share.rushingalien.my.id/rocm-portable/$ROCM_BUNDLE.checksum
+ROCM_CHECKSUM=rocm-portable.checksum
 
 mkdir -p $HOME/.local/bin
 mkdir -p $HOME/.local/rocm 
@@ -32,14 +34,44 @@ if ! which dwarfs > /dev/null 2>&1; then
   echo "dwarfs not found in PATH. Installing dwarfs..."
   # install dwarfs
   curl $DWARFS_URI -o $HOME/.local/bin/$DWARFS_BIN &&
-
+  chmod +x $HOME/.local/bin/$DWARFS_BIN
   ln -s $DWARFS_BIN $HOME/.local/bin/dwarfs
   ln -s $DWARFS_BIN $HOME/.local/bin/mkdwarfs
   ln -s $DWARFS_BIN $HOME/.local/bin/dwarfsck
 fi
 
-# download rocm bundle
-curl $URI -o $HOME/.local/rocm-portable.dwarfs &&
+download_checksum() {
+    echo "Downloading checksum file..."
+    curl -s $CHECKSUM_URI -o $XDG_RUNTIME_DIR/$ROCM_CHECKSUM
+}
+
+# Function to verify the checksum
+verify_checksum() {
+  local local_checksum=$(sha256sum $1 | awk '{print $1}')
+  local remote_checksum=$(cat $2 | awk '{print $1}')
+
+  if [[ "$local_checksum" == "$remote_checksum" ]]; then
+    echo "Checksum verified successfully."
+    return 0
+  else
+    echo "Checksum verification failed. Local: $local_checksum, Remote: $remote_checksum"
+    return 1
+  fi
+}
+
+# Check if the local rocm-portable.dwarfs file exists
+compare_checksum() {
+  if [[ -f $HOME/.local/rocm-portable.dwarfs ]]; then
+    download_checksum
+    if ! verify_checksum $HOME/.local/rocm-portable.dwarfs /tmp/$ROCM_CHECKSUM ; then
+      echo "Redownloading rocm-portable.dwarfs..."
+      curl $URI -o $HOME/.local/rocm-portable.dwarfs
+      compare_checksum
+    fi
+    echo "Local rocm-portable.dwarfs is up to date."
+    return 0
+  fi
+}
 
 # if [[ -n $XDG_DATA_HOME ]]; then
 #   ICD_INSTALL_PATH=$XDG_DATA_HOME/OpenCL/vendors
