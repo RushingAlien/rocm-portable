@@ -33,7 +33,7 @@ fi
 if ! which dwarfs > /dev/null 2>&1; then
   echo "dwarfs not found in PATH. Installing dwarfs..."
   # install dwarfs
-  curl $DWARFS_URI -o $HOME/.local/bin/$DWARFS_BIN &&
+  curl -L $DWARFS_URI -o $HOME/.local/bin/$DWARFS_BIN &&
   chmod +x $HOME/.local/bin/$DWARFS_BIN
   ln -s $DWARFS_BIN $HOME/.local/bin/dwarfs
   ln -s $DWARFS_BIN $HOME/.local/bin/mkdwarfs
@@ -60,7 +60,7 @@ verify_checksum() {
 }
 
 # Check if the local rocm-portable.dwarfs file exists
-compare_checksum() {
+download_and_compare_checksum() {
   if [[ -f $HOME/.local/rocm-portable.dwarfs ]]; then
     download_checksum
     if ! verify_checksum $HOME/.local/rocm-portable.dwarfs $XDG_RUNTIME_DIR/$ROCM_CHECKSUM ; then
