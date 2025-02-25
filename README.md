@@ -18,7 +18,7 @@ This will set up ROCm environment variables to a Flatpak app. Adding global env 
 ```
 
 # Use outside of Flatpak
-Want to use this outside flatpak too? You can use `/etc/ld.so.conf.d/rocm-portable.conf` or directly to  `/etc/ld.so.conf`
+Want to use this outside flatpak too? You can use `/etc/ld.so.conf.d/rocm-portable.conf` or directly to  `/etc/ld.so.conf` with content:
 ```
 /path/to/rocm-portable-mount/lib
 ```
