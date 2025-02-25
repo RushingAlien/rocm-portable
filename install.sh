@@ -42,7 +42,7 @@ fi
 
 download_checksum() {
     echo "Downloading checksum file..."
-    curl -s $CHECKSUM_URI -o $XDG_RUNTIME_DIR/$ROCM_CHECKSUM
+    curl $CHECKSUM_URI -o $XDG_RUNTIME_DIR/$ROCM_CHECKSUM
 }
 
 # Function to verify the checksum
@@ -63,7 +63,7 @@ verify_checksum() {
 compare_checksum() {
   if [[ -f $HOME/.local/rocm-portable.dwarfs ]]; then
     download_checksum
-    if ! verify_checksum $HOME/.local/rocm-portable.dwarfs /tmp/$ROCM_CHECKSUM ; then
+    if ! verify_checksum $HOME/.local/rocm-portable.dwarfs $XDG_RUNTIME_DIR/$ROCM_CHECKSUM ; then
       echo "Redownloading rocm-portable.dwarfs..."
       curl $URI -o $HOME/.local/rocm-portable.dwarfs
       compare_checksum
