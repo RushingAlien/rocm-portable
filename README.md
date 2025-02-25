@@ -5,6 +5,7 @@ It is actually just a repackaging of Arch's ROCm packages. Why Arch? Arch's ROCm
 
 
 # Usage
+There are three scripts, concerning installing, you only need two: `install.sh` and `integrate.sh`. 
 ## package.sh 
 This is not to be used, this is just for transparency on how the bundle is made. And will be used in the future for CI/CD pipelines, as of now, packaging is done manually.
 
@@ -13,6 +14,9 @@ This will check for for availability of dwarfs in the system, if doesn't exist, 
 
 ## integrate.sh
 This will set up ROCm environment variables to a Flatpak app. Adding global env override may break things, so integrate.sh operates on a per-app basis.
+```
+./integrate.sh <flatpak-app-id-1> <flatpak-app-id-2> ...
+```
 
 # releases
 - https://share.rushingalien.my.id/rocm-portable/rocm-portable-0.1.0-6.2.4.dwarfs
