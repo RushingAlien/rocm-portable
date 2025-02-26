@@ -1,8 +1,9 @@
 # Portable ROCm bundle
 This is a contained/standalone ROCm bundle in a dwarfs archive that can be mounted and LD_PRELOADED. Main purpose is to provide ROCm to Flatpak, as the Freedesktop Platform is still missing ROCm runtimes.
 
-It is actually just a repackaging of Arch's ROCm packages. Why Arch? Arch's ROCm runtime is self-contained as it is built that way.
-
+It is actually just a repackaging of amdgpu-install ROCm packages.
+## Reccomended
+It is reccomended that you install dwarfs beforehand. If it is not already installed. this script installs a compressed universal binary to ~/.local/bin 
 # Usage
 There are three scripts, concerning installing, you only need two: `install.sh` and `integrate.sh`. 
 ## package.sh 
@@ -48,3 +49,4 @@ Note $HOME should be expanded to your home directory, as in you write the absolu
 
 # Releases
 - https://share.rushingalien.my.id/rocm-portable/rocm-portable-0.1.0-6.2.4.dwarfs
+- https://share.rushingalien.my.id/rocm-portable/rocm-portable-0.1.0-6.3.3.dwarfs
