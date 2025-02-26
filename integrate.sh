@@ -22,8 +22,8 @@ for app_id in "$@"; do
   [[ $(echo "$ld_library_path" | grep -c "$HOME/.local/rocm/lib") == 0 ]] &&
     CMD+=(--env=LD_LIBRARY_PATH="$ld_library_path$HOME/.local/rocm/lib")
 
-  [[ $(echo "$ocl_icd_vendors" | grep -c "$HOME/.local/share/OpenCL/vendors/rocm-portable.icd") == 0 ]] &&
-    CMD+=(--env=OCL_ICD_VENDORS="$ocl_icd_vendors$HOME/.local/share/OpenCL/vendors/rocm-portable.icd")
+  [[ $(echo "$ocl_icd_vendors" | grep -c "$HOME/.local/share/OpenCL/vendors") == 0 ]] &&
+    CMD+=(--env=OCL_ICD_VENDORS="$ocl_icd_vendors$HOME/.local/share/OpenCL/vendors")
 
   echo "Applying overrides"
 

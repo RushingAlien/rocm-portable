@@ -88,7 +88,10 @@ mkdir -p $ICD_INSTALL_PATH
 
 # install rocm bundle
 echo "libamdocl64.so" > $ICD_INSTALL_PATH/rocm-portable.icd
-echo "$ICD_INSTALL_PATH/rocm-portable.icd created"
+echo "libRusticlOpenCL.so.1" > $ICD_INSTALL_PATH/rusticl.icd
+echo "libnvidia-opencl.so.1" > $ICD_INSTALL_PATH/nvidia.icd
+echo "libigdrcl.so" > $ICD_INSTALL_PATH/intel.icd
+echo "ICD vendors file created"
 
 [[ $(findmnt $ROCM_INSTALL_PATH | wc -l) > 1 ]] &&
   fusermount -u $ROCM_INSTALL_PATH
