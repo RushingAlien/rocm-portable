@@ -89,7 +89,7 @@ mkdir -p $ICD_INSTALL_PATH
 echo "libamdocl64.so" > $ICD_INSTALL_PATH/rocm-portable.icd
 echo "$ICD_INSTALL_PATH/rocm-portable.icd created"
 
-[[ $(findmnt $ROCM_INSTALL_PATH | wc -l) == 1 ]] &&
+[[ $(findmnt $ROCM_INSTALL_PATH | wc -l) > 1 ]] &&
   fusermount -u $ROCM_INSTALL_PATH
 dwarfs $HOME/.local/rocm-portable.dwarfs $ROCM_INSTALL_PATH
 echo "rocm-portable.dwarfs mounted to $ROCM_INSTALL_PATH"
