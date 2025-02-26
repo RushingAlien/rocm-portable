@@ -49,4 +49,4 @@ Note $HOME should be expanded to your home directory, as in you write the absolu
 
 # Releases
 - https://share.rushingalien.my.id/rocm-portable/rocm-portable-0.1.0-6.2.4.dwarfs
-- https://share.rushingalien.my.id/rocm-portable/rocm-portable-0.1.0-6.3.3.dwarfs
+- https://share.rushingalien.my.id/rocm-portable/rocm-portable-0.1.1-6.3.3.dwarfs
