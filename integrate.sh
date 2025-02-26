@@ -5,22 +5,30 @@ if [ $# -eq 0 ]; then
   exit 1
 fi
 
+CMD=(--device=all)
+
 for app_id in "$@"; do
   echo "Processing $app_id..."
 
   # Get the LD_LIBRARY_PATH value from flatpak info --show-permissions
   ld_library_path=$(flatpak info --show-permissions "$app_id" | grep -oP 'LD_LIBRARY_PATH=\K[^ ]+')
 
-  if [ -n "$ld_library_path" ]; then
-    temp_var="$ld_library_path:$HOME/.local/rocm/lib"
-  else
-    temp_var="/app/lib:/usr/lib:$HOME/.local/rocm/lib"
-  fi
+  # Get the OCL_ICD_VENDORS value from flatpak info --show-permissions
+  ocl_icd_vendors=$(flatpak info --show-permissions "$app_id" | grep -oP 'OCL_ICD_VENDORS=\K[^ ]+')
+  
+  [[ -n $ld_library_path ]] && ld_library_path="$ld_library_path:"
+  [[ -n $ocl_icd_vendors ]] && ocl_icd_vendors="$ocl_icd_vendors:"
 
-  echo "Setting LD_LIBRARY_PATH for $app_id to: $temp_var"
+  [[ $(echo "$ld_library_path" | grep -c "$HOME/.local/rocm/lib") == 0 ]] &&
+    CMD+=(--env=LD_LIBRARY_PATH="$ld_library_path$HOME/.local/rocm/lib")
+
+  [[ $(echo "$ocl_icd_vendors" | grep -c "$HOME/.local/share/OpenCL/vendors/rocm-portable.icd") == 0 ]] &&
+    CMD+=(--env=OCL_ICD_VENDORS="$ocl_icd_vendors$HOME/.local/share/OpenCL/vendors/rocm-portable.icd")
+
+  echo "Applying overrides"
 
   # Apply the override
-  flatpak --user override --device=all --env=LD_LIBRARY_PATH="$temp_var" --env=OCL_ICD_VENDORS="$HOME/.local/share/OpenCL/vendors/rocm-portable.icd:/usr/lib/x86_64-linux-gnu/GL/OpenCL/vendors/rusticl.icd" "$app_id"
+  flatpak --user override "${CMD[@]}" "$app_id"
 
   echo "Override applied for $app_id."
 done
