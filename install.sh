@@ -76,7 +76,7 @@ download_and_compare_checksum() {
   return 0
 }
 
-download_checksum
+download_checksum &&
 download_and_compare_checksum
 
 # if [[ -n $XDG_DATA_HOME ]]; then
