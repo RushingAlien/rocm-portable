@@ -13,31 +13,42 @@ URI=https://share.rushingalien.my.id/rocm-portable/$ROCM_BUNDLE
 ROCM_INSTALL_PATH=$HOME/.local/rocm
 CHECKSUM_URI=https://share.rushingalien.my.id/rocm-portable/$ROCM_BUNDLE.checksum
 ROCM_CHECKSUM=rocm-portable.checksum
+SYSTEMD_MOUNT_NAME="$(systemd-escape -p $HOME/.local/rocm).mount"
+TEMPLATE_FILE=rocm-portable.mount.ini
+
+# Set fallback XDG dirs
+[[ ! -v XDG_CONFIG_HOME ]] && XDG_CONFIG_HOME=$HOME/.config
+
 
 mkdir -p $HOME/.local/bin
 mkdir -p $HOME/.local/rocm 
+mkdir -p $XDG_CONFIG_HOME/systemd/user
+mkdir -p $XDG_CONFIG_HOME/environment.d
 
 # Check if $HOME/.local/bin is in PATH
 if [[ ":$PATH:" != *":$HOME/.local/bin:"* ]]; then
     echo "$HOME/.local/bin is not in PATH. Adding it to PATH..."
 
     # Add $HOME/.local/bin to PATH in .bash_profile
-    echo 'export PATH="$HOME/.local/bin:$PATH"' >> $HOME/.bash_profile
+    echo 'PATH="$HOME/.local/bin:$PATH"' >> $XDG_CONFIG_HOME/environment.d/xdg.conf
     PATH="$HOME/.local/bin:$PATH"
-    echo "Added $HOME/.local/bin to PATH in .bash_profile"
+    echo "Added $HOME/.local/bin to PATH via $XDG_CONFIG_HOME/environment.d/xdg.conf"
 else
     echo "$HOME/.local/bin is already in PATH. Skipping PATH modification."
 fi
 
 # Check if dwarfs is already installed
-if ! which dwarfs > /dev/null 2>&1; then
+if ! which dwarfs mount.dwarfs > /dev/null 2>&1; then
   echo "dwarfs not found in PATH. Installing dwarfs..."
   # install dwarfs
   curl -L $DWARFS_URI -o $HOME/.local/bin/$DWARFS_BIN &&
   chmod +x $HOME/.local/bin/$DWARFS_BIN
-  ln -s $DWARFS_BIN $HOME/.local/bin/dwarfs
-  ln -s $DWARFS_BIN $HOME/.local/bin/mkdwarfs
-  ln -s $DWARFS_BIN $HOME/.local/bin/dwarfsck
+  for binary in dwarfs mkdwarfs dwarfsck dwarfsextract; do
+    ln -s "$DWARFS_BIN" "$BIN_PATH/$binary"
+  done
+  echo '#/bin/sh' > $BIN_PATH/mount.dwarfs
+  echo 'dwarfs "$@"' >> $BIN_PATH/mount.dwarfs
+  chmod +x $BIN_PATH/mount.dwarfs
 fi
 
 download_checksum() {
@@ -101,5 +112,11 @@ echo "rocm-portable.dwarfs mounted to $ROCM_INSTALL_PATH"
 flatpak --user override --filesystem=/sys/module/amdgpu:ro --filesystem=~/.local/share/OpenCL:ro --filesystem=~/.local/rocm:ro
 echo -e "Added the following flatpak overrides:  \n--filesystem=/sys/module/amdgpu:ro \n--filesystem=~/.local/share/OpenCL:ro \n--filesystem=~/.local/rocm:ro"  
 
-[[ $(grep -c "dwarfs $HOME/.local/rocm-portable.dwarfs $ROCM_INSTALL_PATH" $HOME/.bash_profile) == 0 ]] &&
-echo "dwarfs $HOME/.local/rocm-portable.dwarfs $ROCM_INSTALL_PATH" >> $HOME/.bash_profile
+if [[ ! -f $XDG_CONFIG_HOME/systemd/user/$SYSTEMD_MOUNT_NAME ]]; then
+  sed \
+    -e "s|@ROCM_DOWNLOAD_PATH@|${ROCM_DOWNLOAD_PATH}|g" \
+    -e "s|@ROCM_PATH@|${ROCM_PATH}|g" \
+    $TEMPLATE_FILE > $XDG_CONFIG_HOME/systemd/user/$SYSTEMD_MOUNT_NAME
+  systemctl --user daemon-reload
+  systemctl --user enable $SYSTEMD_MOUNT_NAME
+fi
