@@ -15,34 +15,35 @@ CHECKSUM_URI=https://share.rushingalien.my.id/rocm-portable/$ROCM_BUNDLE.checksu
 ROCM_CHECKSUM=rocm-portable.checksum
 SYSTEMD_MOUNT_NAME="$(systemd-escape -p $HOME/.local/rocm).mount"
 TEMPLATE_FILE=rocm-portable.mount.ini
+BIN_PATH=$HOME/.local/bin
 
 # Set fallback XDG dirs
 [[ ! -v XDG_CONFIG_HOME ]] && XDG_CONFIG_HOME=$HOME/.config
 
 
-mkdir -p $HOME/.local/bin
+mkdir -p $BIN_PATH
 mkdir -p $HOME/.local/rocm 
 mkdir -p $XDG_CONFIG_HOME/systemd/user
 mkdir -p $XDG_CONFIG_HOME/environment.d
 
 # Check if $HOME/.local/bin is in PATH
-if [[ ":$PATH:" != *":$HOME/.local/bin:"* ]]; then
-    echo "$HOME/.local/bin is not in PATH. Adding it to PATH..."
+if [[ ":$PATH:" != *":$BIN_PATH:"* ]]; then
+    echo "$BIN_PATH is not in PATH. Adding it to PATH..."
 
     # Add $HOME/.local/bin to PATH in .bash_profile
-    echo 'PATH="$HOME/.local/bin:$PATH"' >> $XDG_CONFIG_HOME/environment.d/xdg.conf
-    PATH="$HOME/.local/bin:$PATH"
-    echo "Added $HOME/.local/bin to PATH via $XDG_CONFIG_HOME/environment.d/xdg.conf"
+    echo 'PATH="$BIN_PATH:$PATH"' >> $XDG_CONFIG_HOME/environment.d/xdg.conf
+    PATH="$BIN_PATH:$PATH"
+    echo "Added $BIN_PATH to PATH via $XDG_CONFIG_HOME/environment.d/xdg.conf"
 else
-    echo "$HOME/.local/bin is already in PATH. Skipping PATH modification."
+    echo "$BIN_PATH is already in PATH. Skipping PATH modification."
 fi
 
 # Check if dwarfs is already installed
 if ! which dwarfs mount.dwarfs > /dev/null 2>&1; then
   echo "dwarfs not found in PATH. Installing dwarfs..."
   # install dwarfs
-  curl -L $DWARFS_URI -o $HOME/.local/bin/$DWARFS_BIN &&
-  chmod +x $HOME/.local/bin/$DWARFS_BIN
+  curl -L $DWARFS_URI -o $BIN_PATH/$DWARFS_BIN &&
+  chmod +x $BIN_PATH/$DWARFS_BIN
   for binary in dwarfs mkdwarfs dwarfsck dwarfsextract; do
     ln -s "$DWARFS_BIN" "$BIN_PATH/$binary"
   done
