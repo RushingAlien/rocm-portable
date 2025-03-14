@@ -48,7 +48,7 @@ if ! which dwarfs mount.dwarfs > /dev/null 2>&1; then
     ln -s "$DWARFS_BIN" "$BIN_PATH/$binary"
   done
   echo '#/bin/sh' > $BIN_PATH/mount.dwarfs
-  echo 'dwarfs "$@"' >> $BIN_PATH/mount.dwarfs
+  echo 'exec dwarfs "$@"' >> $BIN_PATH/mount.dwarfs
   chmod +x $BIN_PATH/mount.dwarfs
 fi
 
