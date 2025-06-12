@@ -115,8 +115,8 @@ echo -e "Added the following flatpak overrides:  \n--filesystem=/sys/module/amdg
 
 if [[ ! -f $XDG_CONFIG_HOME/systemd/user/$SYSTEMD_MOUNT_NAME ]]; then
   sed \
-    -e "s|@ROCM_DOWNLOAD_PATH@|${ROCM_DOWNLOAD_PATH}|g" \
-    -e "s|@ROCM_PATH@|${ROCM_PATH}|g" \
+    -e "s|@ROCM_BUNDLE@|${ROCM_BUNDLE}|g" \
+    -e "s|@ROCM_INSTALL_PATH@|${ROCM_INSTALL_PATH}|g" \
     $TEMPLATE_FILE > $XDG_CONFIG_HOME/systemd/user/$SYSTEMD_MOUNT_NAME
   systemctl --user daemon-reload
   systemctl --user enable $SYSTEMD_MOUNT_NAME
