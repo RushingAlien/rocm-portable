@@ -84,7 +84,7 @@ download_and_compare_checksum() {
     download_and_compare_checksum
   fi
   echo "Local rocm-portable.dwarfs is up to date."
-  rm $XDG_RUNTIME_DIR/$ROCM_CHECKSUM
+  rm $XDG_RUNTIME_DIR/$ROCM_CHECKSUM || true
   return 0
 }
 
