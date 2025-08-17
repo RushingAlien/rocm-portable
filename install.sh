@@ -7,8 +7,8 @@ DWARFS_BIN=dwarfs-universal-$DWARFS_VER-Linux-x86_64-clang
 DWARFS_URI=https://github.com/mhx/dwarfs/releases/download/v$DWARFS_VER/$DWARFS_BIN
 
 VER=0.1.1
-ROCM_VER=6.3.3
-ROCM_BUNDLE=rocm-portable-$VER-$ROCM_VER.dwarfs
+ROCM_VER=6.4.3
+ROCM_BUNDLE=rocm-portable-$ROCM_VER.dwarfs
 URI=https://share.rushingalien.my.id/rocm-portable/$ROCM_BUNDLE
 ROCM_INSTALL_PATH=$HOME/.local/rocm
 CHECKSUM_URI=https://share.rushingalien.my.id/rocm-portable/$ROCM_BUNDLE.checksum
@@ -119,5 +119,7 @@ if [[ ! -f $XDG_CONFIG_HOME/systemd/user/$SYSTEMD_MOUNT_NAME ]]; then
     -e "s|@ROCM_INSTALL_PATH@|${ROCM_INSTALL_PATH}|g" \
     $TEMPLATE_FILE > $XDG_CONFIG_HOME/systemd/user/$SYSTEMD_MOUNT_NAME
   systemctl --user daemon-reload
-  systemctl --user enable $SYSTEMD_MOUNT_NAME
+  systemctl --user enable "$SYSTEMD_MOUNT_NAME"
 fi
+
+which mount.dwarfs && systemctl --user restart $SYSTEMD_MOUNT_NAME
